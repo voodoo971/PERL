@@ -15,6 +15,8 @@ sub generate_csv {
 (my $without_extension = $file_sql) =~ s/.sql//g;
 (my $ext_tmp = $file_sql) =~ s/.sql/.tmp/g;
 (my $ext_csv = $file_sql) =~ s/.sql/.csv/g;
+(my $ext_csv_new = $ext_csv) =~ s/_(\d+)//g;
+
 
   open(FILE, "<$file_sql") || die "File not found";
   my @lines = <FILE>;
@@ -48,13 +50,13 @@ sub generate_csv {
 
 chomp($ext_tmp);
 
-print "[ Processing ] création en cours fichier csv [ $ext_csv ]";
-my $s = "cat $ext_tmp | tr -d ';' | tr -d ')' | tr -d '(' > $ext_csv";
+print "[ Processing ] création en cours fichier csv [ $ext_csv ]\n";
+my $s = "cat $ext_tmp | tr -d ';' | tr -d ')' | tr -d '(' > $ext_csv_new";
 
   system ($s);
-  my $cmd = "sed -i \"\/\^\[ \\t\]\*\$\/\d\" $ext_csv";
+  my $cmd = "sed -i \"\/\^\[ \\t\]\*\$\/\d\" $ext_csv_new";
     system ($cmd);
-  print "[ Finish ] >>>>>>>création fichier csv [ $ext_csv ]>>>>> [OK ]";
+  print "[ Finish ] création fichier csv $ext_csv_new [OK ]\n";
   close $fh;
 
 }
