@@ -4,11 +4,11 @@ use strict;
 use 5.010;
 use Data::Dumper qw(Dumper);
 
-open(FILE, "<WorkPlace.sql") || die "File not found";
+open(FILE, "<XXX.sql") || die "File not found";
 my @lines = <FILE>;
 close(FILE);
 
-open(OUT, ">WorkPlace.tmp") || die "File not found";
+open(OUT, ">XXX.tmp") || die "File not found";
 
 foreach my $line1 (@lines)
 {
@@ -32,6 +32,6 @@ $line2 =~ s/'//g;
 close(OUT);
 
 
-system "cat WorkPlace.tmp | tr -d ';' | tr -d ')' | tr -d '(' > WorkPlace.csv";
+system "cat XXX.tmp | tr -d ';' | tr -d ')' | tr -d '(' > XXX.csv";
 
 exit;
