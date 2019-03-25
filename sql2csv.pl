@@ -61,7 +61,7 @@ my $s = "cat $ext_tmp | tr -d ';' | tr -d ')' | tr -d '(' > $ext_csv_new";
 
 sub split_sql {
 
-system("rm -rf *.");
+system("rm -rf *.tmp");
 my ($file_sql) = @_;
 chomp $file_sql;
 my $filecount=0;
@@ -81,16 +81,43 @@ print "Fichier SQL superieur à 10Go on le split \n";
 map_file my($map), $file_sql;
 	advise $map, 'sequential';
   #print Dumper($map);
-my $delimiter = quotemeta ');';
- my @tab = split /" "/, $map;
 
-my $count = 0 ;
+my $delimiter_s = quotemeta(');');
+
+
+(my $map_d = $map) =~ s/$delimiter_s/)\;W/g;
+
+#print Dumper $map_d;
+
+ my @tab = split /;W/, $map_d;
+
+
+#print Dumper @tab;
+
+my $count = 0;
 foreach my $line (@tab)
 {
+
+say $count++." $line\n";
+
+#print Dumper $line;
+
+#say $line;
+if ($count < 50){
+  chomp $line;
+    $line =~  s/\r|//g;
+  #print Dumper $line;
+ #print OUT $count++." $line\n";
+
+
+
+}
+
 #rint $count++, ": $line\n"  ;
-print Dumper $line;
+#print Dumper $line;
 #say $new_filename;
-   print OUT $line;
+
+
 
 }
 $filecount++;
@@ -100,9 +127,10 @@ $filecount++;
 
 
 ######## START SCRIPT
+system("clear");
 
 ## Purge memory Linux
-system("echo 3 > /proc/sys/vm/drop_caches");
+#system("echo 3 > /proc/sys/vm/drop_caches");
 
 my $path = cwd;
 my @file_path = `ls $path | grep \.sql`;
